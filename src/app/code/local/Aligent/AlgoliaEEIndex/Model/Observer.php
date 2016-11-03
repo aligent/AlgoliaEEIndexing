@@ -21,7 +21,7 @@ class Aligent_AlgoliaEEIndex_Model_Observer
         return $connection->fetchOne($select);
     }
 
-    private function findProductIdsPending($changelLogTable, $maxVersion) {
+    private function findProductIdsPending($changelLogTable, $idColumn, $maxVersion) {
         $connection = $this->getConnection();
 
         $select = $connection->select()
@@ -37,13 +37,13 @@ class Aligent_AlgoliaEEIndex_Model_Observer
 
     private function pendingPriceIndex() {
         $maxVersion = $this->findLatestVersion('catalog_product_index_price_cl');
-        return $this->findProductIdsPending('catalog_product_index_price_cl', $maxVersion);
+        return $this->findProductIdsPending('catalog_product_index_price_cl', 'entity_id', $maxVersion);
     }
 
     private function pendingStockIndex()
     {
         $maxVersion = $this->findLatestVersion('cataloginventory_stock_status_cl');
-        return $this->findProductIdsPending('cataloginventory_stock_status_cl', $maxVersion);
+        return $this->findProductIdsPending('cataloginventory_stock_status_cl', 'product_id', $maxVersion);
     }
 
     public function algoliaRebuildStoreProductIndexCollectionCheckIndexes($oEvent)
