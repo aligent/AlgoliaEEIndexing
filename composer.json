@@ -1,0 +1,7 @@
+{
+  "name":"aligent/algoliaEEIndex",
+  "type":"magento-module",
+  "require":{
+    "magento-hackathon/magento-composer-installer":"*"
+  }
+}

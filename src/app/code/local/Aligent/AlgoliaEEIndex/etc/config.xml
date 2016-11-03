@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <global>
+        <helpers>
+            <algoliasearch>
+                <rewrite>
+                    <entity_producthelper>FashionBunker_Algolia_Helper_Algoliasearch_Entity_Producthelper</entity_producthelper>
+                </rewrite>
+            </algoliasearch>
+        </helpers>
+        <events>
+            <algolia_rebuild_store_product_index_collection_check_indexes>
+                <observers>
+                    <aligent_algoliaEEIndex>
+                        <class>aligent_algoliaEEIndex/observer</class>
+                        <method>algoliaRebuildStoreProductIndexCollectionCheckIndexes</method>
+                    </aligent_algoliaEEIndex>
+                </observers>
+            </algolia_rebuild_store_product_index_collection_check_indexes>
+        </events>
+    </global>
+</config>
