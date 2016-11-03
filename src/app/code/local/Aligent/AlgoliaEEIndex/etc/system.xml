@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <aligent translate="label" module="aligent_algoliaeeindex">
+            <label>Aligent</label>
+            <sort_order>9999</sort_order>
+        </aligent>
+    </tabs>
+    <sections>
+        <aligent_algoliaeeindex translate="label" module="aligent_algoliaeeindex">
+            <label>Algolia EE Index</label>
+            <tab>aligent</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label" module="aligent_algoliaeeindex">
+                    <label>Algolia EE Index</label>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <override_runner translate="label">
+                            <label>Override Algolia queue runner.</label>
+                            <sort_order>5</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <comment>Default Algolia queue runner does not reProcess failed events but simply deletes them, this will allow for reProcessing.</comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </override_runner>
+                        <check_price_index translate="label">
+                            <label>Check price index</label>
+                            <sort_order>10</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <comment>Confirm price index for processed products are up to date before sending to Algolia.</comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </check_price_index>
+                        <check_stock_index translate="label">
+                            <label>Check stock index</label>
+                            <sort_order>15</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <comment>Confirm stock index for processed products are up to date before sending to Algolia.</comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </check_stock_index>
+                        <custom_log translate="label">
+                            <label>Use custom log</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Name of the custom log file to append to, if blank default Algolia log will be used.</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_log>
+                    </fields>
+                </settings>
+            </groups>
+        </aligent_algoliaeeindex>
+    </sections>
+</config>

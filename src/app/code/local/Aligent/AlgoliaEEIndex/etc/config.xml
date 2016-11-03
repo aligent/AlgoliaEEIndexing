@@ -32,4 +32,25 @@
             </algolia_rebuild_store_product_index_collection_check_indexes>
         </events>
     </global>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <aligent_algoliaeeindex>
+                                            <title>Aligent AlgoliaEEIndex</title>
+                                        </aligent_algoliaeeindex>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
 </config>

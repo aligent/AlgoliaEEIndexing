@@ -4,8 +4,7 @@ class Aligent_AlgoliaEEIndex_Model_Queue extends Algolia_Algoliasearch_Model_Que
 {
     public function run($limit)
     {
-        $shouldOverrideRun = true;
-        if($shouldOverrideRun) {
+        if(Mage::helper('aligent_algoliaeeindex')->shouldOverrideAlgoliaRunner()) {
 
             //Clear out any jobs higher then max retries.
             $this->db->delete($this->table, 'retries > max_retries');

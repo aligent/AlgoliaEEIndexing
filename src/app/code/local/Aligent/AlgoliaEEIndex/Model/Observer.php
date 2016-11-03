@@ -36,14 +36,26 @@ class Aligent_AlgoliaEEIndex_Model_Observer
     }
 
     private function pendingPriceIndex() {
-        $maxVersion = $this->findLatestVersion('catalog_product_index_price_cl');
-        return $this->findProductIdsPending('catalog_product_index_price_cl', 'entity_id', $maxVersion);
+        $returnArray = array();
+
+        if (Mage::helper('aligent_algoliaeeindex')->shouldCheckPriceIndex()) {
+            $maxVersion = $this->findLatestVersion('catalog_product_index_price_cl');
+            $returnArray = $this->findProductIdsPending('catalog_product_index_price_cl', 'entity_id', $maxVersion);
+        }
+
+        return $returnArray;
     }
 
     private function pendingStockIndex()
     {
-        $maxVersion = $this->findLatestVersion('cataloginventory_stock_status_cl');
-        return $this->findProductIdsPending('cataloginventory_stock_status_cl', 'product_id', $maxVersion);
+        $returnArray = array();
+
+        if (Mage::helper('aligent_algoliaeeindex')->shouldCheckStockIndex()) {
+            $maxVersion = $this->findLatestVersion('cataloginventory_stock_status_cl');
+            $returnArray = $this->findProductIdsPending('cataloginventory_stock_status_cl', 'product_id', $maxVersion);
+        }
+
+        return $returnArray;
     }
 
     public function algoliaRebuildStoreProductIndexCollectionCheckIndexes($oEvent)
