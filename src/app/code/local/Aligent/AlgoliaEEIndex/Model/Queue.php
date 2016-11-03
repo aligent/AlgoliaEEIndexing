@@ -2,6 +2,15 @@
 
 class Aligent_AlgoliaEEIndex_Model_Queue extends Algolia_Algoliasearch_Model_Queue
 {
+    /**
+     * This function will default to the parent::run method if the configuration is not set.
+     *
+     * Override the default run method to:
+     *  - Remove entries that have been retried more then the maximum retry limit
+     *  - Do not remove entries that failed to be processed due to an error, allowing them to be retried.
+     *
+     * @param $limit
+     */
     public function run($limit)
     {
         if(Mage::helper('aligent_algoliaeeindex')->shouldOverrideAlgoliaRunner()) {

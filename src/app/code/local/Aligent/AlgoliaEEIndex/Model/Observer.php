@@ -11,23 +11,37 @@ class Aligent_AlgoliaEEIndex_Model_Observer
         return $this->_connection;
     }
 
-    private function findLatestVersion($changelLogTable) {
+    /**
+     * Find the latest version ID for a particular changeLog
+     *
+     * @param $changeLogTable
+     * @return mixed
+     */
+    private function findLatestVersion($changeLogTable) {
         $connection = $this->getConnection();
 
-        // Find the latest price_index version.
         $select = $connection->select()
             ->from('enterprise_mview_metadata', 'version_id')
-            ->where('changelog_name = ?', $changelLogTable);
+            ->where('changelog_name = ?', $changeLogTable);
         return $connection->fetchOne($select);
     }
 
-    private function findProductIdsPending($changelLogTable, $idColumn, $maxVersion) {
+    /**
+     * Find all product ID's who have a version ID greater then the maxVersion.
+     *
+     * @param $changeLogTable
+     * @param $idColumn
+     * @param $maxVersion
+     *
+     * @return mixed - array of ID's
+     */
+    private function findProductIdsPending($changeLogTable, $idColumn, $maxVersion) {
         $connection = $this->getConnection();
 
         $select = $connection->select()
             ->distinct()
-            ->from($changelLogTable, $idColumn)
-            ->join(array('catalog_product_entity' => 'catalog_product_entity'), "$changelLogTable.$idColumn = catalog_product_entity.entity_id", array())
+            ->from($changeLogTable, $idColumn)
+            ->join(array('catalog_product_entity' => 'catalog_product_entity'), "$changeLogTable.$idColumn = catalog_product_entity.entity_id", array())
             ->where('version_id > ?', $maxVersion);
 
         $this->getAdditionalRestrictions($select);
@@ -35,6 +49,11 @@ class Aligent_AlgoliaEEIndex_Model_Observer
         return $connection->fetchCol($select);
     }
 
+    /**
+     * Find all productId's pending a price reindex.
+     *
+     * @return Array
+     */
     private function pendingPriceIndex() {
         $returnArray = array();
 
@@ -46,6 +65,11 @@ class Aligent_AlgoliaEEIndex_Model_Observer
         return $returnArray;
     }
 
+    /**
+     * Find all productId's pending a stock reindex.
+     *
+     * @return Array
+     */
     private function pendingStockIndex()
     {
         $returnArray = array();
@@ -58,9 +82,16 @@ class Aligent_AlgoliaEEIndex_Model_Observer
         return $returnArray;
     }
 
+    /**
+     * Observe the dispatched event and check if any of the productId's are in a pending index state.
+     * If they are, throw an error to cancel the Algolia Processing of this particular event.
+     *
+     * @param $oEvent
+     * @throws Exception
+     */
     public function algoliaRebuildStoreProductIndexCollectionCheckIndexes($oEvent)
     {
-        // Check if we are processing products and that those products are not pending a price_index change.
+        // Check if we are processing products and that those products are not pending an index change.
         if($oEvent->getProducts() && count($oEvent->getProducts())) {
             if ($this->_productIDsPending === null) {
                 $priceIndexes = $this->pendingPriceIndex();
@@ -70,7 +101,7 @@ class Aligent_AlgoliaEEIndex_Model_Observer
                 $this->_productIDsPending = array_unique(array_merge($priceIndexes, $stockIndexes, $additionalIndexes));
             }
 
-            // If we have items that are pending a price_index check the current products against them.
+            // If we have items that are pending an index change, check the current products against them.
             if ($this->_productIDsPending && count($this->_productIDsPending)) {
                 foreach ($oEvent->getProducts() as $id) {
                     if (in_array($id, $this->_productIDsPending)) {
@@ -83,14 +114,25 @@ class Aligent_AlgoliaEEIndex_Model_Observer
         }
     }
 
-    //Override me for specific situations.
-    private function getAdditionalRestrictions(&$select) {
-        //$select = $select->where("sku like ?", '%_one_way_%');
-    }
-    //Override me for specific situations.
-    private function getAdditionalIndexes() {
-        // add custom $stockIndexes = $this->pendingStockIndex(); //for multiwarehouse?
-        return array();
+    /**
+     * This function can be used to add client specific conditions to filter the pending ID's to reduce array for items we know will be ignored.
+     *
+     * eg.
+     *    Restrict configurables by SKU's - $select = $select->where("sku like ?", '%_one_way_%');
+     *
+     * @param $select
+     */
+    private function getAdditionalRestrictions(&$select) {}
 
+    /**
+     * This function allows for client specific additional indexes to check.
+     * The returned array of entity_id will also be skipped from the Algolia indexing.
+     *
+     * This can be useful if a client is using a multi-warehouse module and not standard indexes.
+     *
+     * @return array
+     */
+    private function getAdditionalIndexes() {
+        return array();
     }
 }
