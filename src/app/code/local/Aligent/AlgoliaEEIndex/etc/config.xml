@@ -1,20 +1,33 @@
 <?xml version="1.0"?>
 <config>
     <global>
-        <helpers>
+        <models>
+            <aligent_algoliaeeindex>
+                <class>Aligent_AlgoliaEEIndex_Model</class>
+            </aligent_algoliaeeindex>
             <algoliasearch>
                 <rewrite>
-                    <entity_producthelper>FashionBunker_Algolia_Helper_Algoliasearch_Entity_Producthelper</entity_producthelper>
+                    <queue>Aligent_AlgoliaEEIndex_Model_Queue</queue>
+                </rewrite>
+            </algoliasearch>
+        </models>
+        <helpers>
+            <aligent_algoliaeeindex>
+                <class>Aligent_AlgoliaEEIndex_Helper</class>
+            </aligent_algoliaeeindex>
+            <algoliasearch>
+                <rewrite>
+                    <entity_producthelper>Aligent_AlgoliaEEIndex_Helper_Algoliasearch_Entity_Producthelper</entity_producthelper>
                 </rewrite>
             </algoliasearch>
         </helpers>
         <events>
             <algolia_rebuild_store_product_index_collection_check_indexes>
                 <observers>
-                    <aligent_algoliaEEIndex>
-                        <class>aligent_algoliaEEIndex/observer</class>
+                    <aligent_algoliaeeindex>
+                        <class>aligent_algoliaeeindex/observer</class>
                         <method>algoliaRebuildStoreProductIndexCollectionCheckIndexes</method>
-                    </aligent_algoliaEEIndex>
+                    </aligent_algoliaeeindex>
                 </observers>
             </algolia_rebuild_store_product_index_collection_check_indexes>
         </events>
