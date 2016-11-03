@@ -26,8 +26,8 @@ class Aligent_AlgoliaEEIndex_Model_Observer
 
         $select = $connection->select()
             ->distinct()
-            ->from($changelLogTable, 'entity_id')
-            ->join(array('catalog_product_entity' => 'catalog_product_entity'), "$changelLogTable.entity_id = catalog_product_entity.entity_id", array())
+            ->from($changelLogTable, $idColumn)
+            ->join(array('catalog_product_entity' => 'catalog_product_entity'), "$changelLogTable.$idColumn = catalog_product_entity.entity_id", array())
             ->where('version_id > ?', $maxVersion);
 
         $this->getAdditionalRestrictions($select);
@@ -55,7 +55,7 @@ class Aligent_AlgoliaEEIndex_Model_Observer
                 $stockIndexes = $this->pendingStockIndex();
                 $additionalIndexes = $this->getAdditionalIndexes();
 
-                $this->_productIDsPending = array_merge($priceIndexes, $stockIndexes, $additionalIndexes);
+                $this->_productIDsPending = array_unique(array_merge($priceIndexes, $stockIndexes, $additionalIndexes));
             }
 
             // If we have items that are pending a price_index check the current products against them.
@@ -63,7 +63,7 @@ class Aligent_AlgoliaEEIndex_Model_Observer
                 foreach ($oEvent->getProducts() as $id) {
                     if (in_array($id, $this->_productIDsPending)) {
                         // Throw an error to retry next time Algolia is processed.
-                        Mage::helper('aligent_algoliaEEIndex/log')->logIndex('Skipping, price index still pending for entityid ' . $id);
+                        Mage::helper('aligent_algoliaeeindex/log')->logIndex('Skipping, index still pending for entityid ' . $id);
                         throw new Exception('Price index still pending for entityid ' . $id);
                     }
                 }
