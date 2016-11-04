@@ -6,6 +6,7 @@ class Aligent_AlgoliaEEIndex_Helper_Data extends Mage_Core_Helper_Abstract
     private $_checkStockIndex = null;
     private $_customLog = null;
     private $_customLogName = null;
+    private $_retryLimit = null;
 
     public function shouldOverrideAlgoliaRunner()
     {
@@ -29,6 +30,14 @@ class Aligent_AlgoliaEEIndex_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_checkStockIndex = Mage::getStoreConfigFlag('aligent_algoliaeeindex/settings/check_stock_index');
         }
         return $this->_checkStockIndex;
+    }
+
+    public function getRetryLimit()
+    {
+        if ($this->_retryLimit === null) {
+            $this->_retryLimit = Mage::getStoreConfig('aligent_algoliaeeindex/settings/number_times_to_retry_events');
+        }
+        return $this->_retryLimit;
     }
 
     public function useCustomLog()

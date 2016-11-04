@@ -15,8 +15,16 @@ class Aligent_AlgoliaEEIndex_Model_Queue extends Algolia_Algoliasearch_Model_Que
     {
         if(Mage::helper('aligent_algoliaeeindex')->shouldOverrideAlgoliaRunner()) {
 
-            //Clear out any jobs higher then max retries.
-            $this->db->delete($this->table, 'retries > max_retries');
+            $retryLimit = Mage::helper('aligent_algoliaeeindex')->getRetryLimit();
+
+            if ($retryLimit !== null) {
+                // Clear out any jobs higher then specified config value
+                $where = $this->db->quoteInto('retries > ?', $retryLimit);
+                $this->db->delete($this->table, $where);
+            } else {
+                //Clear out any jobs higher then max retries.
+                $this->db->delete($this->table, 'retries > max_retries');
+            }
 
             $full_reindex = ($limit === -1);
             $limit = $full_reindex ? 1 : $limit;
